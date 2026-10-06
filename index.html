@@ -1,0 +1,5241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CFC Impact Explorer</title>
+
+    <meta
+        name="description"
+        content="CFC Impact Explorer - Explore refrigerants, environmental impact, products, global CFC production and Indian national data."
+    >
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <style>
+
+        /* =========================================================
+           GLOBAL
+        ========================================================= */
+
+        :root {
+            --bg: #f4f8fb;
+            --bg-soft: #eef5f8;
+            --card: rgba(255, 255, 255, 0.86);
+            --card-solid: #ffffff;
+
+            --text: #102330;
+            --text-soft: #536875;
+            --muted: #788b95;
+
+            --primary: #087f8c;
+            --primary-dark: #075d69;
+            --cyan: #16b8c8;
+            --blue: #3276df;
+
+            --green: #14966b;
+            --green-soft: #e8f8f2;
+
+            --orange: #d88722;
+            --orange-soft: #fff4e3;
+
+            --red: #d65a5a;
+            --red-soft: #fff0f0;
+
+            --border: rgba(16, 35, 48, 0.09);
+
+            --shadow:
+                0 15px 45px rgba(38, 75, 91, 0.08);
+
+            --shadow-hover:
+                0 22px 60px rgba(38, 75, 91, 0.14);
+
+            --radius: 22px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: "Inter", sans-serif;
+            background:
+                radial-gradient(
+                    circle at 10% 0%,
+                    rgba(22, 184, 200, 0.08),
+                    transparent 28%
+                ),
+                radial-gradient(
+                    circle at 90% 15%,
+                    rgba(50, 118, 223, 0.06),
+                    transparent 25%
+                ),
+                var(--bg);
+
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        button,
+        input,
+        select {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .container {
+            width: min(1180px, calc(100% - 32px));
+            margin: auto;
+        }
+
+        /* =========================================================
+           HEADER
+        ========================================================= */
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+
+            background: rgba(255, 255, 255, 0.82);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav {
+            min-height: 74px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 20px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            font-family: "Manrope", sans-serif;
+            font-size: 19px;
+            font-weight: 800;
+        }
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+
+            display: grid;
+            place-items: center;
+
+            border-radius: 13px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #dffbff,
+                    #e8f2ff
+                );
+
+            box-shadow:
+                0 8px 25px rgba(22, 184, 200, 0.14);
+        }
+
+        .brand small {
+            display: block;
+            color: var(--muted);
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-links a {
+            padding: 9px 12px;
+            border-radius: 10px;
+
+            color: var(--text-soft);
+            font-size: 13px;
+            font-weight: 600;
+
+            transition: 0.2s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+            background: #edf9fb;
+        }
+
+        @media (max-width: 760px) {
+            .nav-links {
+                display: none;
+            }
+        }
+
+        /* =========================================================
+           HERO
+        ========================================================= */
+
+        .hero {
+            position: relative;
+            overflow: hidden;
+
+            padding: 90px 0 75px;
+        }
+
+        .hero::before {
+            content: "";
+
+            position: absolute;
+            width: 420px;
+            height: 420px;
+
+            right: -180px;
+            top: -180px;
+
+            border-radius: 50%;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(22, 184, 200, 0.12),
+                    transparent 68%
+                );
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1.25fr 0.75fr;
+            gap: 45px;
+            align-items: center;
+        }
+
+        @media (max-width: 850px) {
+            .hero-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+
+            padding: 7px 11px;
+
+            border: 1px solid rgba(8, 127, 140, 0.12);
+            border-radius: 999px;
+
+            background: rgba(232, 250, 252, 0.7);
+
+            color: var(--primary);
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .hero h1 {
+            margin-top: 20px;
+
+            font-family: "Manrope", sans-serif;
+
+            font-size: clamp(42px, 6vw, 76px);
+            line-height: 0.98;
+
+            letter-spacing: -0.055em;
+        }
+
+        .hero h1 span {
+            background:
+                linear-gradient(
+                    100deg,
+                    var(--primary-dark),
+                    var(--cyan),
+                    var(--blue)
+                );
+
+            -webkit-background-clip: text;
+            background-clip: text;
+
+            color: transparent;
+        }
+
+        .hero p {
+            max-width: 680px;
+            margin-top: 22px;
+
+            color: var(--text-soft);
+            font-size: 17px;
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 12px 17px;
+
+            border-radius: 13px;
+            border: 1px solid var(--border);
+
+            background: white;
+
+            color: var(--text);
+            font-size: 13px;
+            font-weight: 800;
+
+            box-shadow: 0 8px 25px rgba(30, 70, 90, 0.06);
+
+            transition: 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .btn-primary {
+            color: white;
+            border: none;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--primary-dark),
+                    var(--cyan)
+                );
+        }
+
+        /* =========================================================
+           HERO INFO CARD
+        ========================================================= */
+
+        .hero-card {
+            padding: 26px;
+
+            border: 1px solid rgba(8, 127, 140, 0.12);
+            border-radius: 28px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255,255,255,0.92),
+                    rgba(237,250,252,0.88)
+                );
+
+            box-shadow:
+                0 25px 70px rgba(23, 98, 112, 0.12);
+        }
+
+        .hero-orb {
+            width: 130px;
+            height: 130px;
+
+            margin: 5px auto 25px;
+
+            display: grid;
+            place-items: center;
+
+            border-radius: 50%;
+
+            background:
+                radial-gradient(
+                    circle at 35% 30%,
+                    #ffffff,
+                    #dff9fc 35%,
+                    #b8edf1 100%
+                );
+
+            box-shadow:
+                0 0 0 15px rgba(22, 184, 200, 0.04),
+                0 0 55px rgba(22, 184, 200, 0.20);
+
+            font-size: 54px;
+        }
+
+        .hero-card h3 {
+            text-align: center;
+            font-family: "Manrope", sans-serif;
+            font-size: 20px;
+        }
+
+        .hero-card p {
+            text-align: center;
+            margin-top: 7px;
+
+            font-size: 13px;
+            color: var(--text-soft);
+        }
+
+        /* =========================================================
+           STATS
+        ========================================================= */
+
+        .stats {
+            padding-bottom: 35px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+        }
+
+        @media (max-width: 800px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .stat {
+            padding: 20px;
+
+            border: 1px solid var(--border);
+            border-radius: 18px;
+
+            background: var(--card);
+            box-shadow: var(--shadow);
+        }
+
+        .stat-number {
+            font-family: "Manrope", sans-serif;
+            font-size: 26px;
+            font-weight: 800;
+
+            color: var(--primary-dark);
+        }
+
+        .stat-label {
+            margin-top: 4px;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* =========================================================
+           SECTIONS
+        ========================================================= */
+
+        section {
+            padding: 72px 0;
+        }
+
+        .section-heading {
+            max-width: 760px;
+            margin-bottom: 30px;
+        }
+
+        .section-kicker {
+            color: var(--primary);
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .section-heading h2 {
+            margin-top: 8px;
+
+            font-family: "Manrope", sans-serif;
+
+            font-size: clamp(30px, 4vw, 46px);
+            line-height: 1.08;
+            letter-spacing: -0.04em;
+        }
+
+        .section-heading p {
+            margin-top: 12px;
+            color: var(--text-soft);
+        }
+
+        /* =========================================================
+           CATEGORY CARDS
+        ========================================================= */
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+        }
+
+        @media (max-width: 900px) {
+            .category-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .category {
+            position: relative;
+            overflow: hidden;
+
+            padding: 22px;
+
+            min-height: 145px;
+
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+
+            background: var(--card);
+
+            box-shadow: var(--shadow);
+
+            transition: 0.25s ease;
+        }
+
+        .category:hover {
+            transform: translateY(-5px);
+
+            border-color: rgba(22, 184, 200, 0.25);
+
+            box-shadow:
+                0 22px 55px rgba(30, 100, 120, 0.12);
+        }
+
+        .category-icon {
+            font-size: 30px;
+        }
+
+        .category h3 {
+            margin-top: 15px;
+            font-family: "Manrope", sans-serif;
+            font-size: 17px;
+        }
+
+        .category p {
+            margin-top: 5px;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        /* =========================================================
+           PRODUCT EXPLORER
+        ========================================================= */
+
+        .explorer {
+            background:
+                linear-gradient(
+                    180deg,
+                    rgba(238,247,250,0.7),
+                    rgba(244,248,251,0)
+                );
+        }
+
+        .explorer-top {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+
+            align-items: center;
+            justify-content: space-between;
+
+            margin-bottom: 22px;
+        }
+
+        .search {
+            width: min(440px, 100%);
+
+            padding: 13px 16px;
+
+            border: 1px solid var(--border);
+            border-radius: 14px;
+
+            outline: none;
+
+            background: white;
+
+            color: var(--text);
+
+            box-shadow: 0 8px 25px rgba(20, 60, 80, 0.04);
+        }
+
+        .search:focus {
+            border-color: rgba(22, 184, 200, 0.5);
+
+            box-shadow:
+                0 0 0 4px rgba(22, 184, 200, 0.08);
+        }
+
+        .category-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 9px 13px;
+
+            border: 1px solid var(--border);
+            border-radius: 999px;
+
+            background: white;
+
+            color: var(--text-soft);
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .tab.active {
+            border-color: transparent;
+
+            color: white;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--primary-dark),
+                    var(--cyan)
+                );
+
+            box-shadow:
+                0 8px 22px rgba(22, 184, 200, 0.18);
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+        }
+
+        @media (max-width: 950px) {
+            .product-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .product {
+            padding: 20px;
+
+            border: 1px solid var(--border);
+            border-radius: 20px;
+
+            background: white;
+
+            box-shadow: var(--shadow);
+
+            transition: 0.2s ease;
+        }
+
+        .product:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .product-brand {
+            color: var(--primary);
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .product h3 {
+            margin-top: 8px;
+
+            font-family: "Manrope", sans-serif;
+            font-size: 16px;
+        }
+
+        .product-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+
+            margin-top: 13px;
+        }
+
+        .pill {
+            padding: 5px 8px;
+
+            border-radius: 999px;
+
+            background: #f1f7f8;
+
+            color: #526a74;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .pill.good {
+            color: #11795a;
+            background: var(--green-soft);
+        }
+
+        .pill.warn {
+            color: #9a641d;
+            background: var(--orange-soft);
+        }
+
+        .product-description {
+            margin-top: 12px;
+
+            color: var(--text-soft);
+            font-size: 12px;
+        }
+
+        .btn[onclick^="showProduct"] {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn[onclick^="showProduct"]::after {
+            content: "";
+            position: absolute;
+            inset: -40% -20%;
+            background: linear-gradient(115deg, transparent 35%, rgba(255,255,255,.55) 50%, transparent 65%);
+            transform: translateX(-80%);
+            transition: transform .55s ease;
+        }
+
+        .btn[onclick^="showProduct"]:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.08);
+            box-shadow: 0 0 14px rgba(37,99,235,.55), 0 0 32px rgba(14,165,233,.32);
+        }
+
+        .btn[onclick^="showProduct"]:hover::after {
+            transform: translateX(80%);
+        }
+
+        /* =========================================================
+           DETAIL PANEL
+        ========================================================= */
+
+        .details {
+            display: none;
+
+            margin-top: 24px;
+            padding: 26px;
+
+            border: 1px solid rgba(22, 184, 200, 0.18);
+            border-radius: 24px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #ffffff,
+                    #f0fafb
+                );
+
+            box-shadow:
+                0 20px 60px rgba(25, 90, 105, 0.10);
+        }
+
+        .details.show {
+            display: flex;
+            position: fixed;
+            inset: 0;
+            z-index: 5000;
+            margin: 0;
+            padding: 24px;
+            align-items: center;
+            justify-content: center;
+            background: rgba(5, 18, 28, 0.58);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 0;
+            border-radius: 0;
+            box-shadow: none;
+        }
+
+        .details-card {
+            position: relative;
+            width: min(760px, 100%);
+            max-height: min(86vh, 760px);
+            overflow: auto;
+            padding: 30px;
+            border: 1px solid rgba(22,184,200,.28);
+            border-radius: 26px;
+            background: linear-gradient(145deg,#ffffff,#f0fafb);
+            box-shadow: 0 28px 90px rgba(4,30,43,.28), 0 0 34px rgba(22,184,200,.14);
+        }
+
+        .details-close {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            width: 38px;
+            height: 38px;
+            border: 0;
+            border-radius: 50%;
+            background: #eaf7fa;
+            color: #075d69;
+            font-size: 22px;
+            font-weight: 800;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 750px) {
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .detail-box {
+            padding: 17px;
+
+            border: 1px solid var(--border);
+            border-radius: 15px;
+
+            background: rgba(255,255,255,0.75);
+        }
+
+        .detail-box strong {
+            display: block;
+
+            margin-bottom: 5px;
+
+            color: var(--primary-dark);
+            font-size: 11px;
+
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+        }
+
+        .detail-box span {
+            color: var(--text-soft);
+            font-size: 13px;
+        }
+
+        /* =========================================================
+           EDUCATION
+        ========================================================= */
+
+        .education-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        @media (max-width: 800px) {
+            .education-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .edu-card {
+            padding: 28px;
+
+            border-radius: 24px;
+            border: 1px solid var(--border);
+
+            background: white;
+            box-shadow: var(--shadow);
+        }
+
+        .edu-card h3 {
+            font-family: "Manrope", sans-serif;
+            font-size: 22px;
+        }
+
+        .edu-card p {
+            margin-top: 10px;
+            color: var(--text-soft);
+        }
+
+        .edu-card ul {
+            margin-top: 17px;
+            padding-left: 20px;
+            color: var(--text-soft);
+        }
+
+        .edu-card li {
+            margin: 8px 0;
+        }
+
+        /* =========================================================
+           PROS CONS
+        ========================================================= */
+
+        .pros-cons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        @media (max-width: 750px) {
+            .pros-cons {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .pc-card {
+            padding: 26px;
+
+            border-radius: 24px;
+            border: 1px solid var(--border);
+
+            background: white;
+            box-shadow: var(--shadow);
+        }
+
+        .pc-card.pros {
+            border-top: 4px solid var(--green);
+        }
+
+        .pc-card.cons {
+            border-top: 4px solid var(--red);
+        }
+
+        .pc-card h3 {
+            font-family: "Manrope", sans-serif;
+        }
+
+        .pc-card ul {
+            margin-top: 16px;
+            padding-left: 19px;
+
+            color: var(--text-soft);
+        }
+
+        .pc-card li {
+            margin: 9px 0;
+        }
+
+        /* =========================================================
+           GLOBAL DATA
+        ========================================================= */
+
+        .data-section {
+            position: relative;
+        }
+
+        .data-shell {
+            position: relative;
+            overflow: hidden;
+
+            padding: 30px;
+
+            border-radius: 30px;
+
+            border: 1px solid rgba(22, 184, 200, 0.16);
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255,255,255,0.96),
+                    rgba(238,249,251,0.94)
+                );
+
+            box-shadow:
+                0 25px 80px rgba(26, 92, 110, 0.10);
+        }
+
+        .data-shell::before {
+            content: "";
+
+            position: absolute;
+
+            width: 300px;
+            height: 300px;
+
+            right: -120px;
+            top: -140px;
+
+            border-radius: 50%;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(22, 184, 200, 0.12),
+                    transparent 70%
+                );
+
+            pointer-events: none;
+        }
+
+        .data-title-row {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .data-title-row h2 {
+            font-family: "Manrope", sans-serif;
+            font-size: clamp(29px, 4vw, 44px);
+            letter-spacing: -0.04em;
+        }
+
+        .data-title-row p {
+            max-width: 620px;
+            margin-top: 8px;
+            color: var(--text-soft);
+        }
+
+        .data-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+
+            margin-top: 25px;
+        }
+
+        .data-tab {
+            padding: 9px 13px;
+
+            border: 1px solid var(--border);
+            border-radius: 10px;
+
+            background: white;
+
+            color: var(--text-soft);
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .data-tab.active {
+            color: white;
+            border-color: transparent;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--primary-dark),
+                    var(--cyan)
+                );
+        }
+
+        .data-controls {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+
+            gap: 10px;
+
+            margin-top: 18px;
+        }
+
+        .data-controls select {
+            min-width: 180px;
+
+            padding: 10px 12px;
+
+            border: 1px solid var(--border);
+            border-radius: 11px;
+
+            background: white;
+
+            color: var(--text);
+            font-size: 12px;
+            font-weight: 700;
+
+            outline: none;
+        }
+
+        /* =========================================================
+           DATA SUMMARY
+        ========================================================= */
+
+        .data-summary {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+
+            gap: 12px;
+
+            margin-top: 22px;
+        }
+
+        @media (max-width: 800px) {
+            .data-summary {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .data-stat {
+            padding: 17px;
+
+            border-radius: 16px;
+            border: 1px solid var(--border);
+
+            background: rgba(255,255,255,0.78);
+        }
+
+        .data-stat span {
+            color: var(--muted);
+            font-size: 10px;
+            font-weight: 800;
+
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .data-stat strong {
+            display: block;
+
+            margin-top: 5px;
+
+            font-family: "Manrope", sans-serif;
+            font-size: 22px;
+        }
+
+        /* =========================================================
+           TABLE
+        ========================================================= */
+
+        .table-wrapper {
+            overflow-x: auto;
+
+            margin-top: 22px;
+
+            border: 1px solid var(--border);
+            border-radius: 18px;
+
+            background: white;
+        }
+
+        table {
+            width: 100%;
+            min-width: 720px;
+
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 13px 15px;
+
+            border-bottom: 1px solid #edf1f3;
+
+            text-align: right;
+
+            font-size: 12px;
+        }
+
+        th {
+            position: sticky;
+            top: 0;
+
+            background: #f5fafb;
+
+            color: var(--primary-dark);
+
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        th:first-child,
+        td:first-child {
+            text-align: left;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: #fbfefe;
+        }
+
+        .negative {
+            color: #bb5b5b;
+        }
+
+        .positive {
+            color: var(--green);
+        }
+
+        .zero {
+            color: var(--muted);
+        }
+
+        .nr {
+            color: var(--muted);
+            font-weight: 700;
+        }
+
+        /* =========================================================
+           CHART
+        ========================================================= */
+
+        .chart-card {
+            margin-top: 22px;
+            padding: 20px;
+
+            border: 1px solid var(--border);
+            border-radius: 20px;
+
+            background: white;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            gap: 15px;
+            flex-wrap: wrap;
+
+            margin-bottom: 15px;
+        }
+
+        .chart-header h3 {
+            font-family: "Manrope", sans-serif;
+            font-size: 17px;
+        }
+
+        .chart-header span {
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .chart-wrap {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        canvas {
+            display: block;
+
+            width: 100%;
+            min-width: 720px;
+
+            height: 390px;
+        }
+
+        /* =========================================================
+           STATE / UT
+        ========================================================= */
+
+        .availability-banner {
+            display: flex;
+            align-items: flex-start;
+            gap: 13px;
+
+            margin-top: 20px;
+            padding: 17px;
+
+            border-radius: 16px;
+
+            background: #fff8ea;
+            border: 1px solid #f3dfb9;
+
+            color: #76551e;
+            font-size: 12px;
+        }
+
+        .state-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, minmax(0, 1fr));
+
+            gap: 10px;
+
+            margin-top: 20px;
+        }
+
+        @media (max-width: 800px) {
+            .state-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 500px) {
+            .state-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .state-card {
+            padding: 14px;
+
+            border: 1px solid var(--border);
+            border-radius: 14px;
+
+            background: white;
+        }
+
+        .state-card strong {
+            display: block;
+            font-size: 13px;
+        }
+
+        .state-card span {
+            display: block;
+
+            margin-top: 4px;
+
+            color: var(--muted);
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        /* =========================================================
+           TIPS
+        ========================================================= */
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+        }
+
+        @media (max-width: 800px) {
+            .tips-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .tip {
+            padding: 22px;
+
+            border-radius: 20px;
+            border: 1px solid var(--border);
+
+            background: white;
+            box-shadow: var(--shadow);
+        }
+
+        .tip-number {
+            width: 32px;
+            height: 32px;
+
+            display: grid;
+            place-items: center;
+
+            border-radius: 10px;
+
+            background: #e9f8fa;
+            color: var(--primary);
+
+            font-weight: 800;
+            font-size: 12px;
+        }
+
+        .tip h3 {
+            margin-top: 15px;
+            font-family: "Manrope", sans-serif;
+            font-size: 16px;
+        }
+
+        .tip p {
+            margin-top: 7px;
+
+            color: var(--text-soft);
+            font-size: 12px;
+        }
+
+        /* =========================================================
+           FOOTER
+        ========================================================= */
+
+        footer {
+            margin-top: 30px;
+
+            padding: 45px 0;
+
+            border-top: 1px solid var(--border);
+
+            background:
+                linear-gradient(
+                    180deg,
+                    #edf5f7,
+                    #e8f1f4
+                );
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 750px) {
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        footer h3 {
+            font-family: "Manrope", sans-serif;
+        }
+
+        footer p,
+        footer li {
+            color: var(--text-soft);
+            font-size: 12px;
+        }
+
+        footer ul {
+            list-style: none;
+            margin-top: 10px;
+        }
+
+        footer li {
+            margin: 6px 0;
+        }
+
+        .copyright {
+            margin-top: 35px;
+            padding-top: 18px;
+
+            border-top: 1px solid var(--border);
+
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        /* =========================================================
+           REVEAL ANIMATION
+        ========================================================= */
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(18px);
+
+            transition:
+                opacity 0.6s ease,
+                transform 0.6s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* =========================================================
+           EMPTY STATE
+        ========================================================= */
+
+        .empty {
+            grid-column: 1 / -1;
+
+            padding: 35px;
+
+            text-align: center;
+
+            border: 1px dashed #cbd9de;
+            border-radius: 18px;
+
+            color: var(--muted);
+            background: rgba(255,255,255,0.7);
+        }
+
+        /* =========================================================
+           MOBILE
+        ========================================================= */
+
+        @media (max-width: 600px) {
+
+            .hero {
+                padding: 65px 0 50px;
+            }
+
+            section {
+                padding: 55px 0;
+            }
+
+            .data-shell {
+                padding: 20px;
+            }
+
+            .stats-grid {
+                gap: 10px;
+            }
+
+            .stat {
+                padding: 15px;
+            }
+
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- =========================================================
+         HEADER
+    ========================================================= -->
+
+    <header>
+
+        <div class="container nav">
+
+            <a href="#home" class="brand">
+
+                <div class="brand-icon">
+                    🌍
+                </div>
+
+                <div>
+                    CFC Impact Explorer
+                    <small>Environmental Intelligence</small>
+                </div>
+
+            </a>
+
+            <nav class="nav-links">
+
+                <a href="#explore">Explore</a>
+                <a href="#education">Learn</a>
+                <a href="#global">Global</a>
+                <a href="#india">India</a>
+                <a href="#tips">Reduce Impact</a>
+
+            </nav>
+
+        </div>
+
+    </header>
+
+
+    <main>
+
+        <!-- =====================================================
+             HERO
+        ====================================================== -->
+
+        <section class="hero" id="home">
+
+            <div class="container hero-grid">
+
+                <div>
+
+                    <div class="eyebrow">
+                        ● OZONE • CLIMATE • TECHNOLOGY
+                    </div>
+
+                    <h1>
+                        Understand the
+                        <span>CFC impact.</span>
+                    </h1>
+
+                    <p>
+                        Explore products, refrigerants, environmental
+                        effects and verified country-level CFC production
+                        data — all in one interactive dashboard.
+                    </p>
+
+                    <div class="hero-actions">
+
+                        <a href="#explore" class="btn btn-primary">
+                            Explore Models →
+                        </a>
+
+                        <a href="#global" class="btn">
+                            View Global Data
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+                <div class="hero-card">
+
+                    <div class="hero-orb">
+                        🌎
+                    </div>
+
+                    <h3>
+                        Ozone Layer × Technology
+                    </h3>
+
+                    <p>
+                        Learn how older ozone-depleting substances
+                        differ from modern refrigerant technologies.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             STATS
+        ====================================================== -->
+
+        <section class="stats">
+
+            <div class="container stats-grid">
+
+                <div class="stat">
+                    <div class="stat-number">A/I</div>
+                    <div class="stat-label">
+                        UNEP Annex A Group I CFCs
+                    </div>
+                </div>
+
+                <div class="stat">
+                    <div class="stat-number">5</div>
+                    <div class="stat-label">
+                        Recent years displayed
+                    </div>
+                </div>
+
+                <div class="stat">
+                    <div class="stat-number">36</div>
+                    <div class="stat-label">
+                        Indian States & UTs listed
+                    </div>
+                </div>
+
+                <div class="stat">
+                    <div class="stat-number">ODP</div>
+                    <div class="stat-label">
+                        Production reporting unit
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             CATEGORIES
+        ====================================================== -->
+
+        <section>
+
+            <div class="container">
+
+                <div class="section-heading reveal">
+
+                    <div class="section-kicker">
+                        Explore the technology
+                    </div>
+
+                    <h2>
+                        Where refrigerants and
+                        ozone science meet.
+                    </h2>
+
+                    <p>
+                        Browse different product categories and
+                        understand what refrigerant information is
+                        available for each model.
+                    </p>
+
+                </div>
+
+
+                <div class="category-grid">
+
+                    <div class="category reveal">
+                        <div class="category-icon">🧊</div>
+                        <h3>Refrigerators</h3>
+                        <p>Domestic cooling systems</p>
+                    </div>
+
+                    <div class="category reveal">
+                        <div class="category-icon">❄️</div>
+                        <h3>Air Conditioners</h3>
+                        <p>Residential and commercial cooling</p>
+                    </div>
+
+                    <div class="category reveal">
+                        <div class="category-icon">🚗</div>
+                        <h3>Cars</h3>
+                        <p>Vehicle climate systems</p>
+                    </div>
+
+                    <div class="category reveal">
+                        <div class="category-icon">🚌</div>
+                        <h3>Buses</h3>
+                        <p>Transport cooling systems</p>
+                    </div>
+
+                    <div class="category reveal">
+                        <div class="category-icon">🧺</div>
+                        <h3>Washing Machines</h3>
+                        <p>Appliances and lifecycle impact</p>
+                    </div>
+
+                    <div class="category reveal">
+                        <div class="category-icon">🏭</div>
+                        <h3>Industrial Machines</h3>
+                        <p>Industrial refrigeration systems</p>
+                    </div>
+
+                    <div class="category reveal">
+                        <div class="category-icon">🧴</div>
+                        <h3>Aerosols</h3>
+                        <p>Historical and controlled uses</p>
+                    </div>
+
+                    <div class="category reveal">
+                        <div class="category-icon">🧱</div>
+                        <h3>Foam Products</h3>
+                        <p>Historical blowing-agent applications</p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             PRODUCT EXPLORER
+        ====================================================== -->
+
+        <section class="explorer" id="explore">
+
+            <div class="container">
+
+                <div class="section-heading reveal">
+
+                    <div class="section-kicker">
+                        Product explorer
+                    </div>
+
+                    <h2>
+                        Search models.
+                        Understand the refrigerant.
+                    </h2>
+
+                    <p>
+                        Model information is shown only where the
+                        available manufacturer information supports it.
+                        “Not published” is used instead of guessing.
+                    </p>
+
+                </div>
+
+
+                <div class="explorer-top">
+
+                    <input
+                        id="modelSearch"
+                        class="search"
+                        type="search"
+                        placeholder="Search model, brand or refrigerant..."
+                    >
+
+                    <div>
+                        <span
+                            id="modelCount"
+                            style="
+                                color:var(--muted);
+                                font-size:12px;
+                                font-weight:700;
+                            "
+                        >
+                            0 models
+                        </span>
+                    </div>
+
+                </div>
+
+
+                <div class="category-tabs" id="categoryTabs">
+
+                    <button class="tab active" data-category="All">
+                        All
+                    </button>
+
+                    <button class="tab" data-category="Refrigerator">
+                        Refrigerators
+                    </button>
+
+                    <button class="tab" data-category="Air Conditioner">
+                        Air Conditioners
+                    </button>
+
+                    <button class="tab" data-category="Vehicle">
+                        Vehicles
+                    </button>
+
+                    <button class="tab" data-category="Industrial">
+                        Industrial
+                    </button>
+
+                </div>
+
+
+                <div
+                    class="product-grid"
+                    id="productGrid"
+                ></div>
+
+
+                <div
+                    class="details"
+                    id="detailsPanel"
+                    role="dialog"
+                    aria-modal="true"
+                    aria-labelledby="detailTitle"
+                    onclick="if(event.target === this) closeTechnicalInfo()"
+                >
+                    <div class="details-card">
+                        <button class="details-close" type="button" onclick="closeTechnicalInfo()" aria-label="Close technical information">×</button>
+
+                    <div class="section-kicker">
+                        Selected model
+                    </div>
+
+                    <h2
+                        id="detailTitle"
+                        style="
+                            margin-top:5px;
+                            font-family:Manrope;
+                        "
+                    >
+                    </h2>
+
+                    <div
+                        class="details-grid"
+                        id="detailGrid"
+                        style="margin-top:20px;"
+                    ></div>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             EDUCATION
+        ====================================================== -->
+
+        <section id="education">
+
+            <div class="container">
+
+                <div class="section-heading reveal">
+
+                    <div class="section-kicker">
+                        Learn the basics
+                    </div>
+
+                    <h2>
+                        CFCs are more than
+                        just a chemical label.
+                    </h2>
+
+                    <p>
+                        Their environmental significance comes from
+                        their ozone-depleting potential and historical
+                        use across refrigeration, aerosols and foams.
+                    </p>
+
+                </div>
+
+
+                <div class="education-grid">
+
+                    <div class="edu-card reveal">
+
+                        <h3>
+                            What are CFCs?
+                        </h3>
+
+                        <p>
+                            Chlorofluorocarbons are human-made
+                            compounds that were historically used in
+                            applications such as refrigeration,
+                            air-conditioning and aerosol systems.
+                        </p>
+
+                        <ul>
+
+                            <li>
+                                They can contain chlorine, fluorine
+                                and carbon.
+                            </li>
+
+                            <li>
+                                Certain CFCs have significant
+                                ozone-depleting potential.
+                            </li>
+
+                            <li>
+                                CFCs are controlled under the
+                                Montreal Protocol.
+                            </li>
+
+                        </ul>
+
+                    </div>
+
+
+                    <div class="edu-card reveal">
+
+                        <h3>
+                            CFC ≠ every refrigerant
+                        </h3>
+
+                        <p>
+                            A modern appliance having a refrigerant
+                            does not automatically mean that it
+                            contains CFCs.
+                        </p>
+
+                        <ul>
+
+                            <li>
+                                R-600a is an isobutane refrigerant.
+                            </li>
+
+                            <li>
+                                R-32 is a modern HFC refrigerant.
+                            </li>
+
+                            <li>
+                                Exact refrigerant information is
+                                model-specific.
+                            </li>
+
+                        </ul>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             PROS AND CONS
+        ====================================================== -->
+
+        <section>
+
+            <div class="container">
+
+                <div class="section-heading">
+
+                    <div class="section-kicker">
+                        Environmental perspective
+                    </div>
+
+                    <h2>
+                        Benefits, trade-offs
+                        and responsibility.
+                    </h2>
+
+                </div>
+
+
+                <div class="pros-cons">
+
+                    <div class="pc-card pros">
+
+                        <h3>
+                            ✓ Positive direction
+                        </h3>
+
+                        <ul>
+
+                            <li>International controls have dramatically reduced CFC production.</li>
+                            <li>Modern refrigeration technologies can avoid CFC refrigerants.</li>
+                            <li>Better maintenance can reduce unnecessary refrigerant loss.</li>
+                            <li>Responsible disposal supports refrigerant recovery.</li>
+                            <li>Leak detection can reduce avoidable emissions.</li>
+                            <li>Clear equipment labeling helps technicians identify the correct refrigerant.</li>
+                            <li>Model-specific technical documentation reduces guesswork.</li>
+                            <li>Efficient equipment can reduce energy demand during operation.</li>
+                            <li>Professional servicing supports safer end-of-life handling.</li>
+                            <li>International reporting makes long-term ozone-protection progress measurable.</li>
+
+                        </ul>
+
+                    </div>
+
+
+                    <div class="pc-card cons">
+
+                        <h3>
+                            × What still matters
+                        </h3>
+
+                        <ul>
+
+                            <li>Old equipment may contain legacy ozone-depleting substances.</li>
+                            <li>Poor disposal can release refrigerants into the environment.</li>
+                            <li>Refrigerant leakage can contribute to environmental impact.</li>
+                            <li>Incorrect servicing can create avoidable emissions and equipment problems.</li>
+                            <li>Some older equipment has limited technical documentation.</li>
+                            <li>Refrigerant information can vary by model year and market.</li>
+                            <li>Replacing equipment creates manufacturing and end-of-life impacts of its own.</li>
+                            <li>Improper recovery can leave refrigerant in discarded equipment.</li>
+                            <li>Reported production figures do not directly measure appliance leakage.</li>
+                            <li>State-level CFC production figures are not provided by the UNEP country-level dataset.</li>
+
+                        </ul>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             INDIAN CITIES
+        ====================================================== -->
+
+        <section>
+            <div class="container">
+                <div class="section-heading reveal">
+                    <div class="section-kicker">
+                        National • Cities
+                    </div>
+                    <h2>
+                        Indian Cities.
+                    </h2>
+                    <p>
+                        The UNEP production dataset does not publish CFC production by Indian city, so city-level values are shown as NR rather than invented.
+                    </p>
+                </div>
+                <div class="data-shell">
+                    <div class="availability-banner">
+                        <div>ⓘ</div>
+                        <div><strong>10-year availability:</strong> 2015–2024 city-level CFC production is not reported in the UNEP country-level production dataset.</div>
+                    </div>
+                    <div class="state-grid">
+                        <div class="state-card"><strong>Ahmedabad</strong><span>2015–2024: NR</span></div>
+                        <div class="state-card"><strong>Bengaluru</strong><span>2015–2024: NR</span></div>
+                        <div class="state-card"><strong>Chennai</strong><span>2015–2024: NR</span></div>
+                        <div class="state-card"><strong>Delhi</strong><span>2015–2024: NR</span></div>
+                        <div class="state-card"><strong>Hyderabad</strong><span>2015–2024: NR</span></div>
+                        <div class="state-card"><strong>Jaipur</strong><span>2015–2024: NR</span></div>
+                        <div class="state-card"><strong>Kolkata</strong><span>2015–2024: NR</span></div>
+                        <div class="state-card"><strong>Mumbai</strong><span>2015–2024: NR</span></div>
+                        <div class="state-card"><strong>Pune</strong><span>2015–2024: NR</span></div>
+                        <div class="state-card"><strong>Surat</strong><span>2015–2024: NR</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- =====================================================
+             GLOBAL DATA
+        ====================================================== -->
+
+        <section class="data-section" id="global">
+
+            <div class="container">
+
+                <div class="data-shell">
+
+                    <div class="data-title-row">
+
+                        <div>
+
+                            <div class="section-kicker">
+                                Global intelligence
+                            </div>
+
+                            <h2>
+                                Global CFC production
+                            </h2>
+
+                            <p>
+                                UNEP Ozone Secretariat data for
+                                Annex A, Group I CFCs.
+                                Values are shown in ODP tonnes.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="data-tabs">
+
+                        <button
+                            class="data-tab active"
+                            data-view="globalTable"
+                        >
+                            Table
+                        </button>
+
+                        <button
+                            class="data-tab"
+                            data-view="globalBar"
+                        >
+                            Bar Chart
+                        </button>
+
+                        <button
+                            class="data-tab"
+                            data-view="globalLine"
+                        >
+                            Line Chart
+                        </button>
+
+                    </div>
+
+
+                    <div
+                        class="data-controls"
+                        id="globalControls"
+                    >
+
+                        <select id="globalCountry" aria-label="Country filter">
+                            <option value="ALL">All Countries</option>
+                        </select>
+
+                        <select id="globalYear" aria-label="Time range filter">
+                            <option value="5">Past 5 years (2020–2024)</option>
+                            <option value="2024">2024</option>
+                            <option value="2023">2023</option>
+                            <option value="2022">2022</option>
+                            <option value="2021">2021</option>
+                            <option value="2020">2020</option>
+                        </select>
+
+                    </div>
+
+
+                    <div
+                        class="data-summary"
+                        id="globalSummary"
+                    ></div>
+
+
+                    <div id="globalTable"></div>
+
+                    <div
+                        id="globalBar"
+                        style="display:none;"
+                    >
+
+                        <div class="chart-card">
+
+                            <div class="chart-header">
+
+                                <div>
+                                    <h3>
+                                        Year-by-year comparison
+                                    </h3>
+
+                                    <span>
+                                        Negative values can occur in
+                                        reported production accounting.
+                                    </span>
+                                </div>
+
+                            </div>
+
+                            <div class="chart-wrap">
+                                <canvas id="globalBarCanvas"></canvas>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        id="globalLine"
+                        style="display:none;"
+                    >
+
+                        <div class="chart-card">
+
+                            <div class="chart-header">
+
+                                <div>
+                                    <h3>
+                                        CFC production trend
+                                    </h3>
+
+                                    <span>
+                                        2020–2024
+                                    </span>
+                                </div>
+
+                            </div>
+
+                            <div class="chart-wrap">
+                                <canvas id="globalLineCanvas"></canvas>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="availability-banner">
+
+                        <div>ⓘ</div>
+
+                        <div>
+                            These are <strong>reported production
+                            accounting values</strong>, not direct
+                            measurements of appliance leakage.
+                            UNEP's production dataset is reported in
+                            ODP tonnes.
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             INDIA NATIONAL
+        ====================================================== -->
+
+        <section id="india">
+
+            <div class="container">
+
+                <div class="section-heading reveal">
+
+                    <div class="section-kicker">
+                        National • India
+                    </div>
+
+                    <h2>
+                        India.
+                    </h2>
+
+                    <p>
+                        India’s national CFC production is shown
+                        as a dedicated 10-year view using reported
+                        UNEP ODP-tonne values.
+                    </p>
+
+                </div>
+
+
+                <div class="data-shell">
+
+                    <div class="data-tabs">
+
+                        <button
+                            class="data-tab active"
+                            data-india-view="indiaTable"
+                        >
+                            Table
+                        </button>
+
+                        <button
+                            class="data-tab"
+                            data-india-view="indiaBar"
+                        >
+                            Bar Chart
+                        </button>
+
+                        <button
+                            class="data-tab"
+                            data-india-view="indiaLine"
+                        >
+                            Line Chart
+                        </button>
+
+                    </div>
+
+
+                    <div
+                        class="data-summary"
+                        id="indiaSummary"
+                    ></div>
+
+
+                    <div id="indiaTable"></div>
+
+
+                    <div
+                        id="indiaBar"
+                        style="display:none;"
+                    >
+
+                        <div class="chart-card">
+
+                            <div class="chart-header">
+
+                                <h3>
+                                    India — 10-year production view
+                                </h3>
+
+                                <span>
+                                    ODP tonnes
+                                </span>
+
+                            </div>
+
+                            <div class="chart-wrap">
+                                <canvas id="indiaBarCanvas"></canvas>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        id="indiaLine"
+                        style="display:none;"
+                    >
+
+                        <div class="chart-card">
+
+                            <div class="chart-header">
+
+                                <h3>
+                                    India — national trend
+                                </h3>
+
+                                <span>
+                                    2015–2024
+                                </span>
+
+                            </div>
+
+                            <div class="chart-wrap">
+                                <canvas id="indiaLineCanvas"></canvas>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             STATES AND UTs
+        ====================================================== -->
+
+        <section>
+
+            <div class="container">
+
+                <div class="section-heading reveal">
+
+                    <div class="section-kicker">
+                        National • States & UTs
+                    </div>
+
+                    <h2>
+                        Every Indian State &
+                        Union Territory.
+                    </h2>
+
+                    <p>
+                        Listed alphabetically for complete coverage.
+                    </p>
+
+                </div>
+
+
+                <div class="data-shell">
+
+                    <div class="availability-banner">
+
+                        <div>!</div>
+
+                        <div>
+                            <strong>Important data limitation:</strong>
+                            the official UNEP CFC production dataset
+                            reports Parties/countries, not Indian
+                            State or Union Territory production.
+                            Therefore, state-level CFC production
+                            values for 2020–2024 are shown as
+                            <strong>NR</strong> instead of fabricated
+                            zeros.
+                        </div>
+
+                    </div>
+
+
+                    <div class="data-tabs">
+
+                        <button
+                            class="data-tab active"
+                            data-state-view="stateTable"
+                        >
+                            State / UT Table
+                        </button>
+
+                        <button
+                            class="data-tab"
+                            data-state-view="stateAvailability"
+                        >
+                            Availability Chart
+                        </button>
+
+                    </div>
+
+
+                    <div id="stateTable">
+
+                        <div class="table-wrapper">
+
+                            <table>
+
+                                <thead>
+
+                                    <tr>
+                                        <th>State / UT</th>
+                                        <th>2015</th><th>2016</th><th>2017</th><th>2018</th><th>2019</th>
+                                        <th>2020</th><th>2021</th><th>2022</th><th>2023</th><th>2024</th>
+                                    </tr>
+
+                                </thead>
+
+                                <tbody id="stateTableBody"></tbody>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        id="stateAvailability"
+                        style="display:none;"
+                    >
+
+                        <div class="chart-card">
+
+                            <div class="chart-header">
+
+                                <div>
+                                    <h3>
+                                        State-level data availability
+                                    </h3>
+
+                                    <span>
+                                        This chart represents
+                                        reporting availability,
+                                        not CFC production.
+                                    </span>
+                                </div>
+
+                            </div>
+
+                            <div class="chart-wrap">
+
+                                <canvas
+                                    id="stateCanvas"
+                                ></canvas>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        class="state-grid"
+                        id="stateGrid"
+                    ></div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             TIPS
+        ====================================================== -->
+
+        <section id="tips">
+
+            <div class="container">
+
+                <div class="section-heading reveal">
+
+                    <div class="section-kicker">
+                        Reduce unnecessary impact
+                    </div>
+
+                    <h2>
+                        Smarter equipment habits.
+                    </h2>
+
+                    <p>
+                        You do not need to modify refrigerant systems
+                        yourself. Good maintenance and responsible
+                        servicing are the safer approach.
+                    </p>
+
+                </div>
+
+
+                <div class="tips-grid">
+
+                    <div class="tip reveal">
+
+                        <div class="tip-number">
+                            01
+                        </div>
+
+                        <h3>
+                            Follow the manufacturer's schedule
+                        </h3>
+
+                        <p>
+                            Use the maintenance intervals recommended
+                            for your specific appliance or vehicle.
+                        </p>
+
+                    </div>
+
+
+                    <div class="tip reveal">
+
+                        <div class="tip-number">
+                            02
+                        </div>
+
+                        <h3>
+                            Keep airflow unobstructed
+                        </h3>
+
+                        <p>
+                            Clean accessible filters, vents and
+                            condenser areas according to the
+                            manufacturer's instructions.
+                        </p>
+
+                    </div>
+
+
+                    <div class="tip reveal">
+
+                        <div class="tip-number">
+                            03
+                        </div>
+
+                        <h3>
+                            Replace damaged seals
+                        </h3>
+
+                        <p>
+                            Worn refrigerator door seals can reduce
+                            efficiency and make the appliance work
+                            harder.
+                        </p>
+
+                    </div>
+
+
+                    <div class="tip reveal">
+
+                        <div class="tip-number">
+                            04
+                        </div>
+
+                        <h3>
+                            Do not self-service refrigerant
+                        </h3>
+
+                        <p>
+                            Refrigerant handling should be performed
+                            by an appropriately qualified technician.
+                        </p>
+
+                    </div>
+
+
+                    <div class="tip reveal">
+
+                        <div class="tip-number">
+                            05
+                        </div>
+
+                        <h3>
+                            Dispose responsibly
+                        </h3>
+
+                        <p>
+                            When replacing old cooling equipment,
+                            use an appropriate recycling or recovery
+                            channel rather than simply abandoning it.
+                        </p>
+
+                    </div>
+
+
+                    <div class="tip reveal">
+
+                        <div class="tip-number">
+                            06
+                        </div>
+
+                        <h3>
+                            Check the actual model
+                        </h3>
+
+                        <p>
+                            Never assume a refrigerant from a brand
+                            name alone. The exact model and technical
+                            documentation matter.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =========================================================
+         FOOTER
+    ========================================================== -->
+
+    <footer>
+
+        <div class="container">
+
+            <div class="footer-grid">
+
+                <div>
+
+                    <h3>
+                        🌍 CFC Impact Explorer
+                    </h3>
+
+                    <p style="margin-top:10px;">
+                        An educational environmental dashboard
+                        exploring CFCs, refrigerants, products and
+                        reported production data.
+                    </p>
+
+                </div>
+
+
+                <div>
+
+                    <h3>
+                        Data
+                    </h3>
+
+                    <ul>
+
+                        <li>Global CFC production</li>
+                        <li>India national data</li>
+                        <li>States & UT availability</li>
+                        <li>Product information</li>
+
+                    </ul>
+
+                </div>
+
+
+                <div>
+
+                    <h3>
+                        Methodology
+                    </h3>
+
+                    <ul>
+
+                        <li>UNEP Ozone Secretariat</li>
+                        <li>ODP tonnes</li>
+                        <li>Model-specific information</li>
+                        <li>No fabricated state data</li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+
+            <div class="copyright">
+
+                © 2026 CFC Impact Explorer • Educational project
+
+                <br><br>
+
+                Global production data reference:
+                UNEP Ozone Secretariat,
+                Annex A Group I — Chlorofluorocarbons (CFCs).
+
+            </div>
+
+        </div>
+
+    </footer>
+
+
+    <script>
+
+        /* =========================================================
+           PRODUCT DATA
+        ========================================================= */
+
+        const products = [
+
+            /* -----------------------------
+               HAIER
+            ----------------------------- */
+
+            {
+                brand: "Haier",
+                model: "HEF-252DS-P",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Double Door",
+                status: "Manufacturer model",
+                description: "Haier refrigerator model included for product exploration."
+            },
+
+            {
+                brand: "Haier",
+                model: "HEF-253GI-P",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Manufacturer model",
+                description: "Model-specific refrigerant information should be checked against the technical documentation."
+            },
+
+            {
+                brand: "Haier",
+                model: "HEF-333BG-P",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Manufacturer model",
+                description: "Model listed for educational product exploration."
+            },
+
+            {
+                brand: "Haier",
+                model: "HEB-243GS",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Manufacturer model",
+                description: "Model-specific technical information is required to establish refrigerant."
+            },
+
+            {
+                brand: "Haier",
+                model: "HEB-333DS-P",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Manufacturer model",
+                description: "Model listed for educational exploration."
+            },
+
+            {
+                brand: "Haier",
+                model: "HRB-2763BS-E",
+                category: "Refrigerator",
+                refrigerant: "R-600a",
+                cfc: "No CFC identified",
+                type: "Refrigerator",
+                status: "HC refrigerant",
+                description: "Manufacturer information identifies R-600a for this model."
+            },
+
+            {
+                brand: "Haier",
+                model: "HRB-2764CKB-E",
+                category: "Refrigerator",
+                refrigerant: "R-600a",
+                cfc: "No CFC identified",
+                type: "Refrigerator",
+                status: "HC refrigerant",
+                description: "Manufacturer information identifies R-600a for this model."
+            },
+
+            {
+                brand: "Haier",
+                model: "HRB-2872BGB-P",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Manufacturer model",
+                description: "Metalustre-series model."
+            },
+
+            {
+                brand: "Haier",
+                model: "HRB-2872BSI-P",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Manufacturer model",
+                description: "Metalustre-series model."
+            },
+
+            {
+                brand: "Haier",
+                model: "HRB-3152IBGK-P",
+                category: "Refrigerator",
+                refrigerant: "R-600a",
+                cfc: "No CFC identified",
+                type: "Refrigerator",
+                status: "HC refrigerant",
+                description: "Manufacturer information identifies R-600a."
+            },
+
+            {
+                brand: "Haier",
+                model: "HRB-3404BS-E",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Manufacturer model",
+                description: "Model listed in Haier technical/service documentation."
+            },
+
+            {
+                brand: "Haier",
+                model: "HRB-3404PRL-E",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Manufacturer model",
+                description: "Model listed in Haier technical/service documentation."
+            },
+
+            {
+                brand: "Haier",
+                model: "HRB-3654PSL-E",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Manufacturer model",
+                description: "Model listed in Haier technical/service documentation."
+            },
+
+            {
+                brand: "Haier",
+                model: "HRB-3753BBS-P",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Manufacturer model",
+                description: "Model listed for educational exploration."
+            },
+
+            {
+                brand: "Haier",
+                model: "HRB-4952BIS-P",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Manufacturer model",
+                description: "Model listed for educational exploration."
+            },
+
+            {
+                brand: "Haier",
+                model: "HRB-550CG",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Manufacturer model",
+                description: "Model listed in Haier documentation."
+            },
+
+            {
+                brand: "Haier",
+                model: "HRB-550KG",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Manufacturer model",
+                description: "Model listed in Haier documentation."
+            },
+
+            {
+                brand: "Haier",
+                model: "HRB-600IS",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Manufacturer model",
+                description: "Lumiere-series model."
+            },
+
+            {
+                brand: "Haier",
+                model: "HRB-600KGU1",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Manufacturer model",
+                description: "Lumiere-series model."
+            },
+
+            {
+                brand: "Haier",
+                model: "HRB-600MGU1",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Manufacturer model",
+                description: "Lumiere-series model."
+            },
+
+            {
+                brand: "Haier",
+                model: "HRB-600MP",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Manufacturer model",
+                description: "Lumiere-series model."
+            },
+
+            {
+                brand: "Haier",
+                model: "HRB-600PW",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Manufacturer model",
+                description: "Lumiere-series model."
+            },
+
+            {
+                brand: "Haier",
+                model: "HRB-600RW",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Manufacturer model",
+                description: "Lumiere-series model."
+            },
+
+            {
+                brand: "Haier",
+                model: "HRB-700KGU1",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Manufacturer model",
+                description: "Lumiere-series model."
+            },
+
+            {
+                brand: "Haier",
+                model: "HRB-738BG",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Manufacturer model",
+                description: "Model listed in Haier documentation."
+            },
+
+            {
+                brand: "Haier",
+                model: "HRD-1954BR-E",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Manufacturer model",
+                description: "Model listed in Haier documentation."
+            },
+
+            {
+                brand: "Haier",
+                model: "HRD-1954BS-E",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Manufacturer model",
+                description: "Model listed in Haier documentation."
+            },
+
+            {
+                brand: "Haier",
+                model: "HRD-1954PRL-E",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Manufacturer model",
+                description: "Model listed in Haier documentation."
+            },
+
+            {
+                brand: "Haier",
+                model: "HRD-1954PSL-E",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Manufacturer model",
+                description: "Model listed in Haier documentation."
+            },
+
+            {
+                brand: "Haier",
+                model: "HRD-2051SMFA-P",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Current model",
+                description: "Haier refrigerator model."
+            },
+
+            {
+                brand: "Haier",
+                model: "HRD-2051SRFA-P",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Current model",
+                description: "Haier refrigerator model."
+            },
+
+            {
+                brand: "Haier",
+                model: "HRF-2902BGB-P",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Metalustre series",
+                description: "Metalustre-series model."
+            },
+
+            {
+                brand: "Haier",
+                model: "HRF-2902BGI-P",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Metalustre series",
+                description: "Metalustre-series model."
+            },
+
+            {
+                brand: "Haier",
+                model: "HRF-3304BKS-E",
+                category: "Refrigerator",
+                refrigerant: "R-600a",
+                cfc: "No CFC identified",
+                type: "Refrigerator",
+                status: "HC refrigerant",
+                description: "Manufacturer information identifies R-600a."
+            },
+
+            {
+                brand: "Haier",
+                model: "HRF-3752BGB-P",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Metalustre series",
+                description: "Metalustre-series model."
+            },
+
+            {
+                brand: "Haier",
+                model: "HRF-3752BSI-P",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Metalustre series",
+                description: "Metalustre-series model."
+            },
+
+            {
+                brand: "Haier",
+                model: "HRF-3782BGB-P",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Metalustre series",
+                description: "Metalustre-series model."
+            },
+
+            {
+                brand: "Haier",
+                model: "HRF-3782BGI-P",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Metalustre series",
+                description: "Metalustre-series model."
+            },
+
+            {
+                brand: "Haier",
+                model: "HRF-3782PLKG-P",
+                category: "Refrigerator",
+                refrigerant: "R-600a",
+                cfc: "No CFC identified",
+                type: "Refrigerator",
+                status: "HC refrigerant",
+                description: "Manufacturer information identifies R-600a."
+            },
+
+            {
+                brand: "Haier",
+                model: "HRF-618SS",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Manufacturer model",
+                description: "Model listed in Haier documentation."
+            },
+
+            {
+                brand: "Haier",
+                model: "HRF-619CG",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Manufacturer model",
+                description: "Model listed in Haier documentation."
+            },
+
+            {
+                brand: "Haier",
+                model: "HRF-619KG",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Manufacturer model",
+                description: "Model listed in Haier documentation."
+            },
+
+            {
+                brand: "Haier",
+                model: "HRF-619KS",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Manufacturer model",
+                description: "Model listed in Haier documentation."
+            },
+
+            {
+                brand: "Haier",
+                model: "HRF-619SS",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Manufacturer model",
+                description: "Model listed in Haier documentation."
+            },
+
+            {
+                brand: "Haier",
+                model: "HRF-622CG",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Manufacturer model",
+                description: "Model listed in Haier documentation."
+            },
+
+            {
+                brand: "Haier",
+                model: "HRF-622KG",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Manufacturer model",
+                description: "Model listed in Haier documentation."
+            },
+
+            {
+                brand: "Haier",
+                model: "HRF-622KS",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Manufacturer model",
+                description: "Model listed in Haier documentation."
+            },
+
+            {
+                brand: "Haier",
+                model: "HRF-628AF6",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Manufacturer model",
+                description: "Model listed in Haier documentation."
+            },
+
+            {
+                brand: "Haier",
+                model: "HRF-628IF6",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Manufacturer model",
+                description: "Model listed in Haier documentation."
+            },
+
+            {
+                brand: "Haier",
+                model: "HRS-682KGU1",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Current model",
+                description: "Haier refrigerator model."
+            },
+
+            {
+                brand: "Haier",
+                model: "HRS-682KS",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Manufacturer model",
+                description: "Haier refrigerator model."
+            },
+
+            {
+                brand: "Haier",
+                model: "HRS-682WUSU1",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Current model",
+                description: "Haier refrigerator model."
+            },
+
+
+            /* -----------------------------
+               LG
+            ----------------------------- */
+
+            {
+                brand: "LG",
+                model: "GL-D201ASEU",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Manufacturer model",
+                description: "LG refrigerator model."
+            },
+
+            {
+                brand: "LG",
+                model: "GL-R372JPZN",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Manufacturer model",
+                description: "LG refrigerator model."
+            },
+
+            {
+                brand: "LG",
+                model: "GL-R402JPZN",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Manufacturer model",
+                description: "LG refrigerator model."
+            },
+
+            {
+                brand: "LG",
+                model: "GL-S312SPZX",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Manufacturer model",
+                description: "LG refrigerator model."
+            },
+
+            {
+                brand: "LG",
+                model: "GL-T292RSPN",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Manufacturer model",
+                description: "LG refrigerator model."
+            },
+
+            {
+                brand: "LG",
+                model: "GL-T302RSPN",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Manufacturer model",
+                description: "LG refrigerator model."
+            },
+
+            {
+                brand: "LG",
+                model: "GL-T302RPZU",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Manufacturer model",
+                description: "LG refrigerator model."
+            },
+
+            {
+                brand: "LG",
+                model: "GL-T322RPZU",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Manufacturer model",
+                description: "LG refrigerator model."
+            },
+
+            {
+                brand: "LG",
+                model: "GL-T322RSPN",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Manufacturer model",
+                description: "LG refrigerator model."
+            },
+
+            {
+                brand: "LG",
+                model: "GL-T372LPZU",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Manufacturer model",
+                description: "LG refrigerator model."
+            },
+
+            {
+                brand: "LG",
+                model: "GL-T402LPZU",
+                category: "Refrigerator",
+                refrigerant: "Not published",
+                cfc: "Not established",
+                type: "Refrigerator",
+                status: "Manufacturer model",
+                description: "LG refrigerator model."
+            },
+
+
+            /* -----------------------------
+               SAMSUNG
+            ----------------------------- */
+
+            {
+                brand: "Samsung",
+                model: "RR20H28249U/NL",
+                category: "Refrigerator",
+                refrigerant: "R-600a",
+                cfc: "No CFC identified",
+                type: "Single Door Refrigerator",
+                status: "HC refrigerant",
+                description: "Samsung product information identifies R-600a."
+            },
+
+
+            /* -----------------------------
+               VOLTAS
+            ----------------------------- */
+
+            {
+                brand: "Voltas",
+                model: "R32 Cooling Range",
+                category: "Air Conditioner",
+                refrigerant: "R-32",
+                cfc: "No CFC identified",
+                type: "Air Conditioner",
+                status: "Modern refrigerant",
+                description: "Voltas current air-conditioning range includes R-32 systems."
+            },
+
+
+            /* -----------------------------
+               CARRIER
+            ----------------------------- */
+
+            {
+                brand: "Carrier",
+                model: "R32 Cassette Systems",
+                category: "Air Conditioner",
+                refrigerant: "R-32",
+                cfc: "No CFC identified",
+                type: "Commercial Air Conditioner",
+                status: "Modern refrigerant",
+                description: "Carrier current cassette systems include R-32 configurations."
+            },
+
+
+            /* -----------------------------
+               VEHICLE SYSTEMS
+            ----------------------------- */
+
+            { brand: "Vehicle Systems", model: "Passenger Car AC — Legacy", category: "Vehicle", refrigerant: "Model/year dependent", cfc: "CFC not assumed", type: "Passenger car", status: "Educational reference", description: "Exact vehicle refrigerant depends on model year and market; confirm from the vehicle documentation or identification label." },
+            { brand: "Vehicle Systems", model: "Passenger Car AC — Modern", category: "Vehicle", refrigerant: "Model/year dependent", cfc: "CFC not assumed", type: "Passenger car", status: "Educational reference", description: "Modern passenger-car systems use refrigerants selected by the vehicle manufacturer; exact specification must be verified." },
+            { brand: "Vehicle Systems", model: "SUV AC System", category: "Vehicle", refrigerant: "Model/year dependent", cfc: "CFC not assumed", type: "SUV", status: "Educational reference", description: "SUV refrigerant specifications vary by model year and market." },
+            { brand: "Vehicle Systems", model: "Hatchback AC System", category: "Vehicle", refrigerant: "Model/year dependent", cfc: "CFC not assumed", type: "Hatchback", status: "Educational reference", description: "Hatchback systems should be identified from the exact vehicle documentation." },
+            { brand: "Vehicle Systems", model: "Sedan AC System", category: "Vehicle", refrigerant: "Model/year dependent", cfc: "CFC not assumed", type: "Sedan", status: "Educational reference", description: "Sedan refrigerant information depends on the exact model, year and market." },
+            { brand: "Vehicle Systems", model: "Electric Car Thermal System", category: "Vehicle", refrigerant: "Model/year dependent", cfc: "CFC not assumed", type: "Electric vehicle", status: "Educational reference", description: "Electric vehicles can use integrated thermal-management systems; verify the manufacturer specification." },
+            { brand: "Vehicle Systems", model: "Hybrid Car AC System", category: "Vehicle", refrigerant: "Model/year dependent", cfc: "CFC not assumed", type: "Hybrid vehicle", status: "Educational reference", description: "Hybrid vehicle refrigerant details vary by model and production year." },
+            { brand: "Vehicle Systems", model: "City Bus AC System", category: "Vehicle", refrigerant: "Model/year dependent", cfc: "CFC not assumed", type: "City bus", status: "Educational reference", description: "Bus HVAC specifications should be checked against the fleet or vehicle technical documentation." },
+            { brand: "Vehicle Systems", model: "Coach / Intercity Bus HVAC", category: "Vehicle", refrigerant: "Model/year dependent", cfc: "CFC not assumed", type: "Coach", status: "Educational reference", description: "Coach HVAC refrigerant depends on the installed system and vehicle specification." },
+            { brand: "Vehicle Systems", model: "Truck Cabin AC System", category: "Vehicle", refrigerant: "Model/year dependent", cfc: "CFC not assumed", type: "Truck", status: "Educational reference", description: "Truck cabin AC specifications vary by manufacturer, model year and market." },
+
+            /* -----------------------------
+               PLACEHOLDER EDUCATIONAL
+            ----------------------------- */
+
+            {
+                brand: "Generic",
+                model: "Legacy CFC Refrigeration Equipment",
+                category: "Industrial",
+                refrigerant: "Historical CFCs may be applicable",
+                cfc: "Historical / model dependent",
+                type: "Legacy equipment",
+                status: "Historical",
+                description: "Historical equipment should not be assumed to contain CFCs without checking its identification plate or technical documentation."
+            },
+
+            {
+                brand: "Generic",
+                model: "Legacy CFC Aerosol System",
+                category: "Industrial",
+                refrigerant: "Historical CFC propellants",
+                cfc: "Historical",
+                type: "Aerosol",
+                status: "Historical",
+                description: "Some older aerosol applications historically used CFC propellants."
+            }
+
+        ];
+
+
+        /* =========================================================
+           SORT PRODUCTS ALPHABETICALLY
+        ========================================================= */
+
+        products.sort((a, b) => {
+
+            const brandCompare =
+                a.brand.localeCompare(b.brand);
+
+            if (brandCompare !== 0) {
+                return brandCompare;
+            }
+
+            return a.model.localeCompare(b.model);
+
+        });
+
+
+        /* =========================================================
+           PRODUCT EXPLORER
+        ========================================================= */
+
+        const productGrid =
+            document.getElementById("productGrid");
+
+        const modelSearch =
+            document.getElementById("modelSearch");
+
+        const modelCount =
+            document.getElementById("modelCount");
+
+        let selectedCategory = "All";
+
+
+        function renderProducts() {
+
+            const query =
+                modelSearch.value
+                    .trim()
+                    .toLowerCase();
+
+
+            const filtered =
+                products.filter(product => {
+
+                    const matchesCategory =
+                        selectedCategory === "All" ||
+                        product.category === selectedCategory;
+
+
+                    const searchable = [
+                        product.brand,
+                        product.model,
+                        product.category,
+                        product.refrigerant,
+                        product.cfc
+                    ]
+                        .join(" ")
+                        .toLowerCase();
+
+
+                    return (
+                        matchesCategory &&
+                        searchable.includes(query)
+                    );
+
+                });
+
+
+            modelCount.textContent =
+                `${filtered.length} model${filtered.length === 1 ? "" : "s"}`;
+
+
+            if (filtered.length === 0) {
+
+                productGrid.innerHTML = `
+                    <div class="empty">
+                        No models found for this search.
+                    </div>
+                `;
+
+                return;
+
+            }
+
+
+            productGrid.innerHTML =
+                filtered.map((product, index) => {
+
+                    const refrigerantClass =
+                        product.refrigerant === "R-600a" ||
+                        product.refrigerant === "R-32"
+                            ? "good"
+                            : "warn";
+
+
+                    return `
+                        <article
+                            class="product reveal visible"
+                            data-index="${products.indexOf(product)}"
+                        >
+
+                            <div class="product-brand">
+                                ${product.brand}
+                            </div>
+
+                            <h3>
+                                ${product.model}
+                            </h3>
+
+                            <div class="product-meta">
+
+                                <span class="pill">
+                                    ${product.category}
+                                </span>
+
+                                <span class="pill ${refrigerantClass}">
+                                    ${product.refrigerant}
+                                </span>
+
+                            </div>
+
+                            <p class="product-description">
+                                ${product.description}
+                            </p>
+
+                            <button
+                                class="btn"
+                                style="
+                                    margin-top:14px;
+                                    width:100%;
+                                    padding:11px 14px;
+                                    font-weight:800;
+                                    letter-spacing:0.02em;
+                                    color:#ffffff;
+                                    background:linear-gradient(135deg,#2563eb,#0ea5e9);
+                                    border:1px solid rgba(59,130,246,.55);
+                                    box-shadow:0 0 10px rgba(37,99,235,.35), 0 0 24px rgba(14,165,233,.22);
+                                    text-shadow:0 0 8px rgba(255,255,255,.7);
+                                    transition:transform .2s ease, box-shadow .2s ease, filter .2s ease;
+                                "
+                                onclick="showProduct(${products.indexOf(product)})"
+                            >
+                                View technical info
+                            </button>
+
+                        </article>
+                    `;
+
+                })
+                .join("");
+
+        }
+
+
+        function closeTechnicalInfo() {
+            const panel = document.getElementById("detailsPanel");
+            if (panel) panel.classList.remove("show");
+            document.body.style.overflow = "";
+        }
+
+        document.addEventListener("keydown", event => {
+            if (event.key === "Escape") closeTechnicalInfo();
+        });
+
+
+        function showProduct(index) {
+
+            const product = products[index];
+
+            const panel =
+                document.getElementById("detailsPanel");
+
+            const title =
+                document.getElementById("detailTitle");
+
+            const grid =
+                document.getElementById("detailGrid");
+
+
+            title.textContent =
+                `${product.brand} ${product.model}`;
+
+
+            grid.innerHTML = `
+
+                <div class="detail-box">
+                    <strong>Brand</strong>
+                    <span>${product.brand}</span>
+                </div>
+
+                <div class="detail-box">
+                    <strong>Model</strong>
+                    <span>${product.model}</span>
+                </div>
+
+                <div class="detail-box">
+                    <strong>Category</strong>
+                    <span>${product.category}</span>
+                </div>
+
+                <div class="detail-box">
+                    <strong>Refrigerant</strong>
+                    <span>${product.refrigerant}</span>
+                </div>
+
+                <div class="detail-box">
+                    <strong>CFC status</strong>
+                    <span>${product.cfc}</span>
+                </div>
+
+                <div class="detail-box">
+                    <strong>Information status</strong>
+                    <span>${product.status}</span>
+                </div>
+
+                <div
+                    class="detail-box"
+                    style="grid-column:1/-1;"
+                >
+                    <strong>Environmental note</strong>
+                    <span>${product.description}</span>
+                </div>
+
+            `;
+
+
+            panel.classList.add("show");
+            document.body.style.overflow = "hidden";
+
+        }
+
+
+        modelSearch.addEventListener(
+            "input",
+            renderProducts
+        );
+
+
+        document
+            .querySelectorAll(".tab")
+            .forEach(tab => {
+
+                tab.addEventListener("click", () => {
+
+                    document
+                        .querySelectorAll(".tab")
+                        .forEach(t =>
+                            t.classList.remove("active")
+                        );
+
+                    tab.classList.add("active");
+
+                    selectedCategory =
+                        tab.dataset.category;
+
+                    renderProducts();
+
+                });
+
+            });
+
+
+        renderProducts();
+
+
+        /* =========================================================
+           GLOBAL DATA
+        ========================================================= */
+
+        const years =
+            [2020, 2021, 2022, 2023, 2024];
+
+        const indiaYears =
+            [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024];
+
+
+        const globalData = {
+
+            "Argentina": {
+                2020: 0,
+                2021: 0,
+                2022: 0,
+                2023: 0,
+                2024: 0
+            },
+
+            "China": {
+                2020: -2.4,
+                2021: -26.6,
+                2022: -1.5,
+                2023: -44.6,
+                2024: -20.9
+            },
+
+            "India": {
+                2020: 0,
+                2021: 0,
+                2022: 0,
+                2023: 0,
+                2024: 0
+            },
+
+            "Italy": {
+                2020: -34.3,
+                2021: -67.3,
+                2022: -85.8,
+                2023: -7.1,
+                2024: 0
+            },
+
+            "Japan": {
+                2020: 0,
+                2021: 0,
+                2022: 0,
+                2023: 0,
+                2024: 0
+            },
+
+            "Russian Federation": {
+                2020: 0,
+                2021: 0,
+                2022: 0,
+                2023: 0,
+                2024: 0
+            },
+
+            "United States": {
+                2020: -300.1,
+                2021: -161.6,
+                2022: -186,
+                2023: -234.4,
+                2024: -646
+            }
+
+        };
+
+
+        const countrySelect =
+            document.getElementById("globalCountry");
+
+
+        Object.keys(globalData)
+            .sort()
+            .forEach(country => {
+
+                const option =
+                    document.createElement("option");
+
+                option.value = country;
+                option.textContent = country;
+
+                countrySelect.appendChild(option);
+
+            });
+
+
+        countrySelect.value =
+            "United States";
+
+
+
+        const globalYearSelect = document.getElementById("globalYear");
+
+        function getGlobalYears() {
+            return globalYearSelect.value === "5"
+                ? years
+                : [Number(globalYearSelect.value)];
+        }
+
+
+        function getGlobalCountries() {
+            return countrySelect.value === "ALL" ? Object.keys(globalData).sort() : [countrySelect.value];
+        }
+
+
+        function getGlobalSeriesValues(selectedYears) {
+            if (countrySelect.value === "ALL") {
+                return selectedYears.map(year =>
+                    Object.keys(globalData).reduce((sum, country) =>
+                        sum + Number(globalData[country][year] ?? 0), 0)
+                );
+            }
+
+            return selectedYears.map(year =>
+                Number(globalData[countrySelect.value][year] ?? 0)
+            );
+        }
+        function formatNumber(value) {
+
+            return Number(value)
+                .toLocaleString("en-US", {
+                    maximumFractionDigits: 1
+                });
+
+        }
+
+
+        function valueClass(value) {
+
+            if (value < 0) return "negative";
+
+            if (value > 0) return "positive";
+
+            return "zero";
+
+        }
+
+
+        function renderGlobalSummary() {
+
+            const selectedYears = getGlobalYears();
+            const countries = getGlobalCountries();
+            const country = countrySelect.value;
+            const values = countries.flatMap(c => selectedYears.map(year => globalData[c][year]));
+
+
+            const total =
+                values.reduce(
+                    (sum, value) =>
+                        sum + value,
+                    0
+                );
+
+
+            const min =
+                Math.min(...values);
+
+
+            const max =
+                Math.max(...values);
+
+
+            const latestYear = selectedYears[selectedYears.length - 1];
+            const latest = country === "ALL"
+                ? countries.reduce((sum,c) => sum + Number(globalData[c][latestYear] ?? 0), 0)
+                : Number(globalData[country][latestYear] ?? 0);
+
+
+            document.getElementById(
+                "globalSummary"
+            ).innerHTML = `
+
+                <div class="data-stat">
+                    <span>Country</span>
+                    <strong>${country === "ALL" ? "All Countries" : country}</strong>
+                </div>
+
+                <div class="data-stat">
+                    <span>${latestYear}</span>
+                    <strong>${formatNumber(latest)}</strong>
+                </div>
+
+                <div class="data-stat">
+                    <span>Lowest</span>
+                    <strong>${formatNumber(min)}</strong>
+                </div>
+
+                <div class="data-stat">
+                    <span>${selectedYears.length}-year sum</span>
+                    <strong>${formatNumber(total)}</strong>
+                </div>
+
+            `;
+
+        }
+
+
+        function renderGlobalTable() {
+
+            let html = `
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+                                <th>Country</th>
+                                ${getGlobalYears().map(year => `<th>${year}</th>`).join("")}
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+            `;
+
+
+            getGlobalCountries().forEach(country => {
+
+                    html += `
+                        <tr>
+
+                            <td>
+                                <strong>${country === "ALL" ? "All Countries" : country}</strong>
+                            </td>
+
+                            ${getGlobalYears().map(year => {
+
+                                const value =
+                                    globalData[country][year];
+
+                                return `
+                                    <td
+                                        class="${valueClass(value)}"
+                                    >
+                                        ${formatNumber(value)}
+                                    </td>
+                                `;
+
+                            }).join("")}
+
+                        </tr>
+                    `;
+
+                });
+
+
+            html += `
+                        </tbody>
+
+                    </table>
+
+                </div>
+            `;
+
+
+            document.getElementById(
+                "globalTable"
+            ).innerHTML = html;
+
+        }
+
+
+        /* =========================================================
+           CANVAS UTILITIES
+        ========================================================= */
+
+        function prepareCanvas(canvas) {
+
+            const ratio =
+                window.devicePixelRatio || 1;
+
+            const width =
+                canvas.clientWidth;
+
+            const height =
+                canvas.clientHeight;
+
+
+            canvas.width =
+                width * ratio;
+
+            canvas.height =
+                height * ratio;
+
+
+            const ctx =
+                canvas.getContext("2d");
+
+            ctx.scale(ratio, ratio);
+
+            return {
+                ctx,
+                width,
+                height
+            };
+
+        }
+
+
+        function drawGrid(
+            ctx,
+            width,
+            height,
+            padding,
+            minValue,
+            maxValue
+        ) {
+
+            const chartHeight =
+                height -
+                padding.top -
+                padding.bottom;
+
+
+            const range =
+                maxValue - minValue || 1;
+
+
+            ctx.font =
+                "11px Inter";
+
+
+            for (let i = 0; i <= 5; i++) {
+
+                const value =
+                    minValue +
+                    (range * i / 5);
+
+
+                const y =
+                    height -
+                    padding.bottom -
+                    ((value - minValue) / range) *
+                    chartHeight;
+
+
+                ctx.strokeStyle =
+                    "#e8eef1";
+
+                ctx.lineWidth = 1;
+
+                ctx.beginPath();
+
+                ctx.moveTo(
+                    padding.left,
+                    y
+                );
+
+                ctx.lineTo(
+                    width - padding.right,
+                    y
+                );
+
+                ctx.stroke();
+
+
+                ctx.fillStyle =
+                    "#71858e";
+
+                ctx.textAlign =
+                    "right";
+
+                ctx.fillText(
+                    formatNumber(value),
+                    padding.left - 9,
+                    y + 4
+                );
+
+            }
+
+
+            if (
+                minValue <= 0 &&
+                maxValue >= 0
+            ) {
+
+                const zeroY =
+                    height -
+                    padding.bottom -
+                    ((0 - minValue) / range) *
+                    chartHeight;
+
+
+                ctx.strokeStyle =
+                    "#9eb3bb";
+
+                ctx.lineWidth = 1.5;
+
+                ctx.beginPath();
+
+                ctx.moveTo(
+                    padding.left,
+                    zeroY
+                );
+
+                ctx.lineTo(
+                    width - padding.right,
+                    zeroY
+                );
+
+                ctx.stroke();
+
+            }
+
+        }
+
+
+        /* =========================================================
+           GLOBAL BAR CHART
+        ========================================================= */
+
+        function drawGlobalBar() {
+
+            const canvas = document.getElementById("globalBarCanvas");
+            const { ctx, width, height } = prepareCanvas(canvas);
+            const selectedYears = getGlobalYears();
+            const countries = getGlobalCountries();
+
+            const items = [];
+            countries.forEach(country => {
+                selectedYears.forEach(year => {
+                    items.push({ country, year, value: Number(globalData[country][year] ?? 0) });
+                });
+            });
+
+            const values = items.map(item => item.value);
+            let min = Math.min(...values, 0);
+            let max = Math.max(...values, 0);
+            if (min === max) { min -= 1; max += 1; }
+            const pad = Math.max((max - min) * 0.15, 1);
+            min -= pad;
+            max += pad;
+
+            const padding = {
+                top: 42,
+                right: 30,
+                bottom: items.length > 10 ? 105 : 70,
+                left: 75
+            };
+
+            drawGrid(ctx, width, height, padding, min, max);
+
+            const chartHeight = height - padding.top - padding.bottom;
+            const chartWidth = width - padding.left - padding.right;
+            const range = max - min || 1;
+            const slotWidth = chartWidth / Math.max(items.length, 1);
+            const zeroY = height - padding.bottom - ((0 - min) / range) * chartHeight;
+
+            items.forEach((item, index) => {
+                const barWidth = Math.min(42, slotWidth * 0.68);
+                const x = padding.left + slotWidth * index + (slotWidth - barWidth) / 2;
+                const valueY = height - padding.bottom - ((item.value - min) / range) * chartHeight;
+                const top = Math.min(zeroY, valueY);
+                const barHeight = Math.max(Math.abs(zeroY - valueY), 2);
+
+                ctx.fillStyle = item.value < 0 ? "#3276df" : "#16b8c8";
+                ctx.beginPath();
+                ctx.roundRect(x, top, barWidth, barHeight, 5);
+                ctx.fill();
+
+                ctx.fillStyle = "#19323e";
+                ctx.font = "700 10px Inter";
+                ctx.textAlign = "center";
+                const labelY = item.value >= 0 ? top - 7 : top + barHeight + 14;
+                ctx.fillText(formatNumber(item.value), x + barWidth / 2, labelY);
+
+                ctx.save();
+                ctx.translate(x + barWidth / 2, height - padding.bottom + 13);
+                ctx.rotate(-Math.PI / 3.8);
+                ctx.fillStyle = "#526b75";
+                ctx.font = "10px Inter";
+                ctx.textAlign = "right";
+                ctx.fillText(`${item.country} — ${item.year}`, 0, 0);
+                ctx.restore();
+            });
+
+            ctx.fillStyle = "#5f747d";
+            ctx.font = "10px Inter";
+            ctx.textAlign = "left";
+            ctx.fillText("ODP tonnes", padding.left, 16);
+
+            ctx.fillStyle = "#19323e";
+            ctx.font = "700 11px Inter";
+            ctx.fillText(
+                countrySelect.value === "ALL"
+                    ? "Each bar = country + year"
+                    : `${countrySelect.value} — each bar = year`,
+                padding.left,
+                31
+            );
+        }
+
+
+        /* =========================================================
+           GLOBAL LINE CHART
+        ========================================================= */
+
+        function drawGlobalLine() {
+
+            const canvas = document.getElementById("globalLineCanvas");
+            const { ctx, width, height } = prepareCanvas(canvas);
+            const selectedYears = getGlobalYears();
+            const countries = getGlobalCountries();
+            const palette = ["#087f8c", "#3276df", "#d97706", "#7c3aed", "#16a34a", "#db2777", "#475569"];
+
+            const allValues = countries.flatMap(country =>
+                selectedYears.map(year => Number(globalData[country][year] ?? 0))
+            );
+            let min = Math.min(...allValues, 0);
+            let max = Math.max(...allValues, 0);
+            if (min === max) { min -= 1; max += 1; }
+            const pad = Math.max((max - min) * 0.15, 1);
+            min -= pad;
+            max += pad;
+
+            const padding = { top: 62, right: 30, bottom: 55, left: 75 };
+            drawGrid(ctx, width, height, padding, min, max);
+
+            const chartHeight = height - padding.top - padding.bottom;
+            const chartWidth = width - padding.left - padding.right;
+            const range = max - min || 1;
+
+            countries.forEach((country, countryIndex) => {
+                const values = selectedYears.map(year => Number(globalData[country][year] ?? 0));
+                const points = values.map((value, index) => ({
+                    x: padding.left + chartWidth * (values.length === 1 ? 0.5 : index / (values.length - 1)),
+                    y: height - padding.bottom - ((value - min) / range) * chartHeight,
+                    value
+                }));
+
+                ctx.beginPath();
+                points.forEach((point, index) => {
+                    if (index === 0) ctx.moveTo(point.x, point.y);
+                    else ctx.lineTo(point.x, point.y);
+                });
+                ctx.strokeStyle = palette[countryIndex % palette.length];
+                ctx.lineWidth = 3;
+                ctx.stroke();
+
+                points.forEach(point => {
+                    ctx.beginPath();
+                    ctx.arc(point.x, point.y, 5, 0, Math.PI * 2);
+                    ctx.fillStyle = palette[countryIndex % palette.length];
+                    ctx.fill();
+                    ctx.strokeStyle = "#ffffff";
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+
+                    ctx.fillStyle = "#19323e";
+                    ctx.font = "700 10px Inter";
+                    ctx.textAlign = "center";
+                    ctx.fillText(formatNumber(point.value), point.x, point.y - 10);
+                });
+            });
+
+            selectedYears.forEach((year, index) => {
+                const x = padding.left + chartWidth * (selectedYears.length === 1 ? 0.5 : index / (selectedYears.length - 1));
+                ctx.fillStyle = "#617781";
+                ctx.font = "11px Inter";
+                ctx.textAlign = "center";
+                ctx.fillText(year, x, height - 22);
+            });
+
+            // Country legend: makes every line identifiable at a glance.
+            let legendX = padding.left;
+            let legendY = 18;
+            ctx.font = "700 10px Inter";
+            countries.forEach((country, index) => {
+                const labelWidth = ctx.measureText(country).width + 34;
+                if (legendX + labelWidth > width - padding.right) {
+                    legendX = padding.left;
+                    legendY += 17;
+                }
+                ctx.fillStyle = palette[index % palette.length];
+                ctx.fillRect(legendX, legendY - 8, 16, 3);
+                ctx.fillStyle = "#425862";
+                ctx.textAlign = "left";
+                ctx.fillText(country, legendX + 21, legendY - 5);
+                legendX += labelWidth;
+            });
+        }
+
+
+        /* =========================================================
+           INDIA
+        ========================================================= */
+
+        const indiaData = {
+            2015: 0,
+            2016: -34.1,
+            2017: 0,
+            2018: 0,
+            2019: 0,
+            2020: 0,
+            2021: 0,
+            2022: 0,
+            2023: 0,
+            2024: 0
+        };
+
+
+        function renderIndiaSummary() {
+
+            const values =
+                indiaYears.map(year =>
+                    indiaData[year]
+                );
+
+
+            document.getElementById(
+                "indiaSummary"
+            ).innerHTML = `
+
+                <div class="data-stat">
+                    <span>Country</span>
+                    <strong>India</strong>
+                </div>
+
+                <div class="data-stat">
+                    <span>2024</span>
+                    <strong>${formatNumber(indiaData[2024])}</strong>
+                </div>
+
+                <div class="data-stat">
+                    <span>10-year minimum</span>
+                    <strong>${formatNumber(Math.min(...values))}</strong>
+                </div>
+
+                <div class="data-stat">
+                    <span>10-year total</span>
+                    <strong>${formatNumber(values.reduce((a,b) => a+b, 0))}</strong>
+                </div>
+
+            `;
+
+        }
+
+
+        function renderIndiaTable() {
+
+            document.getElementById(
+                "indiaTable"
+            ).innerHTML = `
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+                                <th>Country</th>
+                                ${indiaYears.map(year => `<th>${year}</th>`).join("")}
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            <tr>
+
+                                <td>
+                                    <strong>India</strong>
+                                </td>
+
+                                ${indiaYears.map(year => `
+
+                                    <td class="${valueClass(indiaData[year])}">
+                                        ${formatNumber(indiaData[year])}
+                                    </td>
+
+                                `).join("")}
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            `;
+
+        }
+
+
+        function drawIndiaBar() {
+
+            const canvas = document.getElementById("indiaBarCanvas");
+            const { ctx, width, height } = prepareCanvas(canvas);
+            const padding = { top: 40, right: 30, bottom: 65, left: 75 };
+            const values = indiaYears.map(year => Number(indiaData[year] ?? 0));
+            let min = Math.min(...values, 0);
+            let max = Math.max(...values, 0);
+            if (min === max) { min -= 1; max += 1; }
+            const pad = Math.max((max - min) * 0.15, 1);
+            min -= pad; max += pad;
+            drawGrid(ctx, width, height, padding, min, max);
+            const chartHeight = height - padding.top - padding.bottom;
+            const chartWidth = width - padding.left - padding.right;
+            const range = max - min || 1;
+            const slot = chartWidth / indiaYears.length;
+            const zeroY = height - padding.bottom - ((0 - min) / range) * chartHeight;
+            indiaYears.forEach((year, index) => {
+                const value = values[index];
+                const barWidth = Math.min(50, slot * 0.58);
+                const x = padding.left + index * slot + (slot - barWidth) / 2;
+                const valueY = height - padding.bottom - ((value - min) / range) * chartHeight;
+                const top = Math.min(zeroY, valueY);
+                const barHeight = Math.max(Math.abs(zeroY - valueY), 2);
+                ctx.fillStyle = value < 0 ? "#3276df" : "#16b8c8";
+                ctx.beginPath(); ctx.roundRect(x, top, barWidth, barHeight, 5); ctx.fill();
+                ctx.fillStyle = "#526b75"; ctx.font = "11px Inter"; ctx.textAlign = "center";
+                ctx.fillText(year, x + barWidth / 2, height - 30);
+                ctx.fillStyle = "#19323e"; ctx.font = "700 11px Inter";
+                const labelY = value >= 0 ? top - 8 : top + barHeight + 15;
+                ctx.fillText(formatNumber(value), x + barWidth / 2, labelY);
+            });
+        }
+
+
+        function drawIndiaLine() {
+
+            drawSimpleLine(
+                "indiaLineCanvas",
+                indiaData,
+                indiaYears
+            );
+
+        }
+
+
+        function drawSimpleLine(
+            canvasId,
+            data,
+            chartYears = years
+        ) {
+
+            const canvas =
+                document.getElementById(canvasId);
+
+
+            const {
+                ctx,
+                width,
+                height
+            } =
+                prepareCanvas(canvas);
+
+
+            const values = chartYears.map(year => Number(data[year] ?? 0));
+
+
+            let min =
+                Math.min(...values, 0);
+
+            let max =
+                Math.max(...values, 0);
+
+
+            if (min === max) {
+                min -= 1;
+                max += 1;
+            }
+
+
+            min *= 1.2;
+            max *= 1.2;
+
+
+            const padding = {
+                top: 35,
+                right: 30,
+                bottom: 60,
+                left: 75
+            };
+
+
+            drawGrid(
+                ctx,
+                width,
+                height,
+                padding,
+                min,
+                max
+            );
+
+
+            const chartHeight =
+                height -
+                padding.top -
+                padding.bottom;
+
+
+            const chartWidth =
+                width -
+                padding.left -
+                padding.right;
+
+
+            const range =
+                max - min;
+
+
+            const points =
+                values.map((value, index) => {
+
+                    return {
+
+                        x:
+                            padding.left +
+                            chartWidth *
+                            (values.length === 1 ? 0.5 : index / (values.length - 1)),
+
+                        y:
+                            height -
+                            padding.bottom -
+                            ((value - min) / range) *
+                            chartHeight,
+
+                        value
+
+                    };
+
+                });
+
+
+            ctx.beginPath();
+
+
+            points.forEach((point, index) => {
+
+                if (index === 0) {
+
+                    ctx.moveTo(
+                        point.x,
+                        point.y
+                    );
+
+                } else {
+
+                    ctx.lineTo(
+                        point.x,
+                        point.y
+                    );
+
+                }
+
+            });
+
+
+            ctx.strokeStyle =
+                "#087f8c";
+
+            ctx.lineWidth = 3;
+
+            ctx.stroke();
+
+
+            points.forEach(point => {
+
+                ctx.beginPath();
+
+                ctx.arc(
+                    point.x,
+                    point.y,
+                    5,
+                    0,
+                    Math.PI * 2
+                );
+
+                ctx.fillStyle =
+                    "#16b8c8";
+
+                ctx.fill();
+
+
+                ctx.fillStyle =
+                    "#243b45";
+
+                ctx.font =
+                    "700 11px Inter";
+
+                ctx.textAlign =
+                    "center";
+
+                ctx.fillText(
+                    formatNumber(point.value),
+                    point.x,
+                    point.y - 12
+                );
+
+            });
+
+
+            chartYears.forEach((year, index) => {
+
+                ctx.fillStyle =
+                    "#647881";
+
+                ctx.font =
+                    "11px Inter";
+
+                ctx.textAlign =
+                    "center";
+
+                ctx.fillText(
+                    year,
+                    points[index].x,
+                    height - 25
+                );
+
+            });
+
+        }
+
+
+        renderIndiaSummary();
+
+        renderIndiaTable();
+
+
+        /* =========================================================
+           GLOBAL INITIAL RENDER
+        ========================================================= */
+
+        renderGlobalSummary();
+
+        renderGlobalTable();
+
+
+        /* =========================================================
+           GLOBAL DATA TABS
+        ========================================================= */
+
+        document
+            .querySelectorAll("[data-view]")
+            .forEach(button => {
+
+                button.addEventListener("click", () => {
+
+                    document
+                        .querySelectorAll("[data-view]")
+                        .forEach(btn =>
+                            btn.classList.remove("active")
+                        );
+
+                    button.classList.add("active");
+
+
+                    const view =
+                        button.dataset.view;
+
+
+                    [
+                        "globalTable",
+                        "globalBar",
+                        "globalLine"
+                    ]
+                        .forEach(id => {
+
+                            document.getElementById(id)
+                                .style.display =
+                                id === view
+                                    ? "block"
+                                    : "none";
+
+                        });
+
+
+                    if (view === "globalBar") {
+                        drawGlobalBar();
+                    }
+
+                    if (view === "globalLine") {
+                        drawGlobalLine();
+                    }
+
+                });
+
+            });
+
+
+        function refreshGlobalDataViews() {
+            renderGlobalSummary();
+            renderGlobalTable();
+
+            const active = document.querySelector("[data-view].active");
+            if (active && active.dataset.view === "globalBar") drawGlobalBar();
+            if (active && active.dataset.view === "globalLine") drawGlobalLine();
+        }
+
+        countrySelect.addEventListener("change", refreshGlobalDataViews);
+        globalYearSelect.addEventListener("change", refreshGlobalDataViews);
+
+
+        /* =========================================================
+           INDIA TABS
+        ========================================================= */
+
+        document
+            .querySelectorAll("[data-india-view]")
+            .forEach(button => {
+
+                button.addEventListener("click", () => {
+
+                    document
+                        .querySelectorAll("[data-india-view]")
+                        .forEach(btn =>
+                            btn.classList.remove("active")
+                        );
+
+                    button.classList.add("active");
+
+
+                    const view =
+                        button.dataset.indiaView;
+
+
+                    [
+                        "indiaTable",
+                        "indiaBar",
+                        "indiaLine"
+                    ]
+                        .forEach(id => {
+
+                            document.getElementById(id)
+                                .style.display =
+                                id === view
+                                    ? "block"
+                                    : "none";
+
+                        });
+
+
+                    if (view === "indiaBar") {
+                        drawIndiaBar();
+                    }
+
+                    if (view === "indiaLine") {
+                        drawIndiaLine();
+                    }
+
+                });
+
+            });
+
+
+        /* =========================================================
+           STATES + UNION TERRITORIES
+        ========================================================= */
+
+        const statesAndUTs = [
+
+            "Andaman and Nicobar Islands",
+            "Andhra Pradesh",
+            "Arunachal Pradesh",
+            "Assam",
+            "Bihar",
+            "Chandigarh",
+            "Chhattisgarh",
+            "Dadra and Nagar Haveli and Daman and Diu",
+            "Delhi",
+            "Goa",
+            "Gujarat",
+            "Haryana",
+            "Himachal Pradesh",
+            "Jammu and Kashmir",
+            "Jharkhand",
+            "Karnataka",
+            "Kerala",
+            "Ladakh",
+            "Lakshadweep",
+            "Madhya Pradesh",
+            "Maharashtra",
+            "Manipur",
+            "Meghalaya",
+            "Mizoram",
+            "Nagaland",
+            "Odisha",
+            "Puducherry",
+            "Punjab",
+            "Rajasthan",
+            "Sikkim",
+            "Tamil Nadu",
+            "Telangana",
+            "Tripura",
+            "Uttar Pradesh",
+            "Uttarakhand",
+            "West Bengal"
+
+        ];
+
+
+        statesAndUTs.sort(
+            (a, b) =>
+                a.localeCompare(b)
+        );
+
+
+        function renderStateTable() {
+
+            const body =
+                document.getElementById(
+                    "stateTableBody"
+                );
+
+
+            body.innerHTML =
+                statesAndUTs
+                    .map(state => `
+
+                        <tr>
+
+                            <td>
+                                <strong>${state}</strong>
+                            </td>
+
+                            <td class="nr">NR</td><td class="nr">NR</td><td class="nr">NR</td><td class="nr">NR</td><td class="nr">NR</td>
+                            <td class="nr">NR</td><td class="nr">NR</td><td class="nr">NR</td><td class="nr">NR</td><td class="nr">NR</td>
+
+                        </tr>
+
+                    `)
+                    .join("");
+
+        }
+
+
+        function renderStateCards() {
+
+            const grid =
+                document.getElementById(
+                    "stateGrid"
+                );
+
+
+            grid.innerHTML =
+                statesAndUTs
+                    .map(state => `
+
+                        <div class="state-card">
+
+                            <strong>
+                                ${state}
+                            </strong>
+
+                            <span>
+                                2020–2024: NR
+                            </span>
+
+                        </div>
+
+                    `)
+                    .join("");
+
+        }
+
+
+        function drawStateAvailability() {
+
+            const canvas =
+                document.getElementById(
+                    "stateCanvas"
+                );
+
+
+            const {
+                ctx,
+                width,
+                height
+            } =
+                prepareCanvas(canvas);
+
+
+            const padding = {
+                top: 35,
+                right: 30,
+                bottom: 65,
+                left: 75
+            };
+
+
+            const maxValue =
+                statesAndUTs.length;
+
+
+            drawGrid(
+                ctx,
+                width,
+                height,
+                padding,
+                0,
+                maxValue
+            );
+
+
+            const chartHeight =
+                height -
+                padding.top -
+                padding.bottom;
+
+
+            const zeroY =
+                height -
+                padding.bottom;
+
+
+            ctx.fillStyle =
+                "#dce8eb";
+
+
+            ctx.fillRect(
+                padding.left,
+                zeroY - 2,
+                width -
+                padding.left -
+                padding.right,
+                4
+            );
+
+
+            ctx.fillStyle =
+                "#536a74";
+
+            ctx.font =
+                "700 12px Inter";
+
+            ctx.textAlign =
+                "center";
+
+
+            ctx.fillText(
+                "No state/UT-level CFC production values available in the official country-level dataset",
+                width / 2,
+                24
+            );
+
+
+            ctx.fillStyle =
+                "#087f8c";
+
+            ctx.font =
+                "700 13px Inter";
+
+            ctx.fillText(
+                "Reporting availability: 0 / 36",
+                width / 2,
+                height - 20
+            );
+
+        }
+
+
+        renderStateTable();
+
+        renderStateCards();
+
+
+        /* =========================================================
+           STATE TABS
+        ========================================================= */
+
+        document
+            .querySelectorAll("[data-state-view]")
+            .forEach(button => {
+
+                button.addEventListener("click", () => {
+
+                    document
+                        .querySelectorAll("[data-state-view]")
+                        .forEach(btn =>
+                            btn.classList.remove("active")
+                        );
+
+                    button.classList.add("active");
+
+
+                    const view =
+                        button.dataset.stateView;
+
+
+                    [
+                        "stateTable",
+                        "stateAvailability"
+                    ]
+                        .forEach(id => {
+
+                            document.getElementById(id)
+                                .style.display =
+                                id === view
+                                    ? "block"
+                                    : "none";
+
+                        });
+
+
+                    if (
+                        view ===
+                        "stateAvailability"
+                    ) {
+
+                        drawStateAvailability();
+
+                    }
+
+                });
+
+            });
+
+
+        /* =========================================================
+           SCROLL REVEAL
+        ========================================================= */
+
+        const revealObserver =
+            new IntersectionObserver(
+                entries => {
+
+                    entries.forEach(entry => {
+
+                        if (entry.isIntersecting) {
+
+                            entry.target
+                                .classList
+                                .add("visible");
+
+                            revealObserver
+                                .unobserve(
+                                    entry.target
+                                );
+
+                        }
+
+                    });
+
+                },
+                {
+                    threshold: 0.12
+                }
+            );
+
+
+        document
+            .querySelectorAll(".reveal")
+            .forEach(element => {
+
+                revealObserver.observe(element);
+
+            });
+
+
+        /* =========================================================
+           RESPONSIVE CHART REDRAW
+        ========================================================= */
+
+        window.addEventListener(
+            "resize",
+            () => {
+
+                const globalActive =
+                    document.querySelector(
+                        "[data-view].active"
+                    );
+
+
+                if (
+                    globalActive?.dataset.view ===
+                    "globalBar"
+                ) {
+
+                    drawGlobalBar();
+
+                }
+
+
+                if (
+                    globalActive?.dataset.view ===
+                    "globalLine"
+                ) {
+
+                    drawGlobalLine();
+
+                }
+
+
+                const indiaActive =
+                    document.querySelector(
+                        "[data-india-view].active"
+                    );
+
+
+                if (
+                    indiaActive?.dataset.indiaView ===
+                    "indiaBar"
+                ) {
+
+                    drawIndiaBar();
+
+                }
+
+
+                if (
+                    indiaActive?.dataset.indiaView ===
+                    "indiaLine"
+                ) {
+
+                    drawIndiaLine();
+
+                }
+
+
+                const stateActive =
+                    document.querySelector(
+                        "[data-state-view].active"
+                    );
+
+
+                if (
+                    stateActive?.dataset.stateView ===
+                    "stateAvailability"
+                ) {
+
+                    drawStateAvailability();
+
+                }
+
+            }
+        );
+
+    </script>
+
+</body>
+</html>
